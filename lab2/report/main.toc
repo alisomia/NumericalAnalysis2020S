@@ -1,0 +1,9 @@
+\contentsline {section}{\numberline {1}Numerical Integration Formula}{1}
+\contentsline {subsection}{\numberline {1.1}Interpolation Type and Algebraic Precision}{1}
+\contentsline {subsection}{\numberline {1.2}Newton--Cotes formula and Gauss formula}{2}
+\contentsline {subsection}{\numberline {1.3}Composite Integration and Adaptive Integration}{3}
+\contentsline {section}{\numberline {2}Question}{3}
+\contentsline {subsection}{\numberline {2.1}Preprocessing}{4}
+\contentsline {subsection}{\numberline {2.2}Numerical Result and Discussion}{4}
+\contentsline {subsection}{\numberline {2.3}Romberg Technique}{6}
+\contentsline {subsection}{\numberline {2.4}Conclusion}{6}

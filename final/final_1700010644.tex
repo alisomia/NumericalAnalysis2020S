@@ -1,0 +1,293 @@
+\documentclass{article}
+\usepackage[ruled, linesnumbered]{algorithm2e}
+\def\showtopic{Numerical Analysis}
+\def\showtitle{Solutions to Final Exam}
+\def\showabs{Final}
+\def\showauthor{Ting Lin, 1700010644}
+\def\showchead{LIN}
+\input{preamble.tex}
+\DeclareMathOperator{\size}{size}
+\begin{document}
+	\maketitle
+	\thispagestyle{fancy}
+	\tableofcontents
+	
+	\section*{}
+
+\section{~}
+\subsection{~}
+\paragraph{Lagrange's Formula:}
+\begin{equation}
+\begin{split}
+P(x) = & 0\frac{(x+0.5)(x-0.5)}{(-1+0.5)(-1-0.5)}  -
+1\frac{(x+1)(x-0.5)}{(-0.5+1)(-0.5-0.5)} + 
+1\frac{(x+1)(x+0.5)}{(0.5+1)(0.5+0.5)}\\
+= & \frac{8}{3} x^2 + 2x - \frac{2}{3}
+\end{split}
+\end{equation}
+\paragraph{Newton's Formula:}
+We first calculate that 
+$f[-1;-0.5] = -2, f[-0.5;0.5] = 2$
+$f[-1;-0.5;0.5] = \frac{8}{3}.$
+The by Newton's formula we calculate the interpolation polynomial:
+\begin{equation}
+\begin{split}
+P(x) = & f[-1] + f[-1;-0.5](x+1) + f[-1;-0.5;0.5](x+1)(x+0.5) \\ 
+= & 0 - 2(x+1)  + \frac{8}{3}(x+1)(x+0.5) \\
+= & (\frac{8}{3}x - \frac{2}{3})(x+1)
+\end{split}
+\end{equation}
+
+\subsection{~}
+The piecewise interpolation function 
+\begin{equation}
+P(x) = \left\{ 
+\begin{aligned}
+-2(x+1) & ~~-1\le x \le -0.5 \\
+2x &~~ -0.5 \le x \le 0.5
+\end{aligned}
+ \right.
+\end{equation}
+And interpolation value become vacuous when $x$ is outside the interval $[-1,0.5]$.
+
+
+\subsection{~}
+
+The basis of spline function is 
+$$1, x+0.5, (x+0.5)^2, (x+0.5)^3, (x+0.5)_+^3.$$
+Here $a_+ =\max(a,0)$.
+We suppose the spline function has the form 
+$$P(x) = a_1(x+0.5)_+^3 + a_2(x+0.5)^3 + a_3(x+0.5)^2 + a_4(x+0.5) + a_5.$$
+Then five conditions 
+$$P(-1) = 0, P(-0.5) = -1, P(0.5)=1, P''(-1) = 0, P''(0.5) = 0$$ become
+\begin{align}
+-\frac 18 a_2 + \frac 14 a_3 - \frac 12 a_4 + a_5 =&~ 0\\
+a_5 =&~-1\\
+a_1 + a_2 + a_3 + a_4 + a_5 =&~1\\
+-3a_2 + 2a_3 =&~0\\
+6a_1 + 6a_2 + 2a_3 =&~0
+\end{align}
+Solve the system we find 
+$$a_1 = -4, a_2 = \frac 83, a_3 = 4, a_4 = -\frac 23, a_5 = -1,$$
+and therefore the spline function is 
+$$P(x) = -4(x+0.5)_+^3 + \frac 83(x+0.5)^3 + 4(x+0.5)^2 + -\frac 23(x+0.5) -1 .$$
+Again, the function value is vacuous when $x$ outside $[-1,0.5]$, as we indicated in previous subproblem.
+\subsection{~}
+
+The following least square problem is
+$$\Phi(a,b) = (-a+b)^2 + (-0.5a+b+1)^2 + (0.5a+b-1)^2 = (3a^2)/2 - 2ab - 2a + 3b^2 + 2.$$
+We aim to find $a,b$ minimizing $\Phi(a,b)$. 
+The first order condition yields
+$$3a-2b-2=0, 6b-2a=0$$
+The solution is $a = \frac 67, b = \frac 27$. The linear function is $\frac 67 x + \frac 27$.
+
+\section{~}
+\subsection{~}
+Taking $f(x) = 1, x, x^2$ we have 
+\begin{equation}
+\label{1}
+A_1 + 2 + A_3 = 3 
+\end{equation}
+\begin{equation}
+\label{x}
+2x_1 + 3A_3 = \frac 92
+\end{equation}
+\begin{equation}
+\label{x2}
+2x_1^2 + 9A_3 = 9
+\end{equation}
+
+
+
+
+We have (\eqref{x2} - 3*\eqref{x}):
+
+\begin{equation}
+\label{x2-3x}
+2(x_1^2-3x_1) = -\frac 92
+\end{equation}
+yielding that $x_1 = \frac 32$.
+Then we know $A_3 = \frac 12$ and $A_1 = \frac 12$. And the scheme is just Simpson scheme. For $f(x) = x^3$, we have $$LHS = \frac{81}{4} = 2(\frac 32)^3 + \frac 123^3 = RHS$$
+But for $f(x) = x(3-x)(x-\frac 32)^2$, LHS is non-zero but RHS is zero. Hence the algebraic order of the given scheme is 3.
+
+\subsection{~}
+Taking $f(x) = 1, x, x^2, x^3$ we have 
+\begin{equation}
+\label{11}
+A_1 + A_2 + A_3 +A_4= 3 
+\end{equation}
+\begin{equation}
+\label{xx}
+\frac{1}{2}A_2 + 2A_3 + 3A_4 = \frac 92
+\end{equation}
+\begin{equation}
+\label{xx2}
+\frac{1}{4}A_2 + 4A_3 + 9A_4 = 9
+\end{equation}
+\begin{equation}
+\label{xx3}
+\frac{1}{8}A_2 + 8A_3 + 27A_4 = \frac{81}{4}
+\end{equation}
+
+This linear system \eqref{11}, \eqref{xx}, \eqref{xx2}, \eqref{xx3} has a unique solution 
+$$A_1 = 0, A_2 = \frac{6}{5}, A_3 = \frac{3}{2}, A_4 = \frac{3}{10}$$
+And it is self-evident that the scheme is of third order from our deduction.
+
+
+\section{~}
+Rewrite the equation as $$\frac 12(x + \frac ax) = x.$$ We aim to find the fixed point of 
+$$\frac{1}{2}(x+ \frac ax).$$
+
+
+We will show that 
+\begin{equation}
+\label{iter}
+x_{k+1} = \frac 12 (x_k + \frac{a}{x_k})
+\end{equation} is locally convergent. Direct calculation yields
+\begin{equation}
+\label{iter2}
+\begin{split}
+x_{k+1} - \sqrt{a}
+ ~=~& \frac 12 (x_k - \sqrt{a} + \frac{a}{x_k} - \sqrt{a})\\
+~=~& (x_k - \sqrt a)(\frac 12 - \frac 12 \frac{\sqrt a}{x_k})\\
+~=~& \frac{1}{2x_k} (x_k - \sqrt a)^2
+\end{split}
+\end{equation}
+Then if $|x_k - \sqrt{a}|<\frac{1}{4} \sqrt a$, we obtain that $$|x_{k+1} - \sqrt{a}| \le  \frac 16 |x_k - \sqrt a|$$
+Hence the scheme converges locally. 
+
+From \eqref{iter2}, we conclude that the scheme is of second order, and the error constant $$\lim_{n\to \infty} \frac{|x_{k+1} - \sqrt a|}{|x_{k} - \sqrt a|^2} = \frac{1}{2\sqrt a}$$
+\section{~}
+\subsection{~}
+We expand LHS and RHS resp. and for simplicity we use $f, f[x], f[y]$ to denote $f(x_n, y_n), f_x(x_n,y_n), f_y(x_n,y_n)$.
+\paragraph{LHS}
+\begin{equation}
+\begin{split}
+y_{n+1} =& y_n + hf + \\
+&+\frac{1}{2}h^2(f[x] + f[y]y') \\
+&+ \frac{1}{6}h^3(f[xx] + 2f[xy]y' + f[yy]y'^2 + f[y]y'') + O(h^4)
+\end{split}
+\end{equation}
+Noticing that $y' = f(x,y(x)) = f, y'' = f[x] + f[y]y' = f[x] + ff[y]$, we have 
+\begin{equation}
+\begin{split}
+y_{n+1} =& y_n + hf + \\
+&+\frac{1}{2}h^2(f[x] + f[y]f) \\
+&+ \frac{1}{6}h^3(f[xx] + 2ff[xy] + f^2f[yy] + f[x]f[y]+ff[y]^2) + O(h^4)
+\end{split}
+\end{equation}
+\paragraph{RHS}
+\begin{equation}
+\begin{split}
+K_2 =& f + \\
+&+ h(ff[y]b_{21} + f[x]a_2) + \\
+&+ \frac{1}{2}h^2(f^2f[yy]b_{21}^2 + 2ff[xy]a_2 b_{21} + f[xx]a_2^2) + O(h^3)
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+K_3 =& f + \\
+&+ h(ff[y]b_{31} + ff[y]b_{32} +  f[x]a_3) + \\
+&+ \frac{1}{2}h^2(f^2f[yy]b_{31}^2 + 2f^2f[yy]b_{31}b_{32} + f^2f[yy]b_{32}^2 +\\
+&+2ff[y]^2 b_{21}b_{32} + 2ff[xy]a_3b_{31} + 2ff[xy]a_3b_{32} + 2f[x]f[y] a_2b_{32}+ f[xx]a_3^2) + O(h^3)
+\end{split}
+\end{equation}
+Hence 
+\begin{enumerate}
+	\item Comparing $h$: $c_1 + c_2 + c_3 = 1$
+	\item Comparing $h^2$ term:
+		$f[x]$ term: $$c_2a_2 + c_3a_3 = \frac{1}{2}$$
+		$ff[y]$ term: $$c_2b_{21} + c_3b_{31} + c_{3}b_{32} = \frac{1}{2}$$
+	\item Comparing $h^3$ term:
+		$f[xx]$ term:
+			$$c_2a_2^2 + c_3a_3^2 = \frac{1}{3}$$
+		$ff[xy]$ term:
+		$$2c_2a_2b_{21} + 2c_3a_3b_{31} + 2c_3a_3b_{32} = \frac{2}{3}$$
+		$f^2f[yy]$ term:
+		$$c_2b_{21}^2 + c_3b_{31}^2 + 2c_3b_{31}b_{32} + c_3 b_{32}^2 = \frac 13$$
+		$f[x]f[y]$ term:
+		$$2c_3a_2b_{32} = \frac 13$$
+		$ff[y]^2$ term:
+		$$2c_3b_{21}b_{32} = \frac 13$$
+\end{enumerate}
+
+The eight equations are what we need.
+\subsection{~}
+We choose 
+$$a_2 = \frac 12 , a_3 = \frac 34$$
+$$c_{1} = \frac 29, c_2 = \frac 13, c_3 = \frac 49$$
+$$b_{21} = \frac 12, b_{31} = 0, b_{32} = \frac 34$$
+
+And it is a solution to equations in 4.1.
+
+\subsection{~}
+From 4.1 and 4.2, we have already known that $y(x_{n+1}) - y(x_n) = O(h^4)$. Based on this, we prove the scheme is of third order. 
+We suppose our scheme is written as 
+$$y_{n+1} = y_n + h\phi(x_n,y_n,h)$$ We first prove the result provided $\phi$ is Lipschitz on $y$. 
+\begin{proof}
+	We define $\bar {y}_{n+1} = y(x_n) + h\phi(x_n, y(x_n),h)$,then we have $|\bar{y}_{n+1} - y(x_{n+1})| \le Ch^4$ for some constant $C$ (independent on $h$). 
+	
+	Set $e_n = |y_n - y(x_n)|$, we found that 
+	\begin{equation}
+	\begin{split}
+	e_{n+1} =& |y_{n+1} - y(x_{n+1})|\\
+	\le &|y_{n+1} - \bar y_{n+1}| + |\bar y_{n+1} - y(x_n)| \\
+	\le & |y_n + h\phi(x_n,y_n,h) - y(x_n) - h\phi(x_n, y_n, h)| + Ch^{4}\\
+	\le & (1+hL)e_n + Ch^4.
+	\end{split}
+	\end{equation}
+	Here $L$ is the Lipschitz constant of $\phi$.
+	
+	
+	We have 
+		\begin{equation}
+	\begin{split}
+	e_{n+1} \le& (1+hL)e_n + Ch^4 \\
+	\le& (1+hL)e_{n-1} + C[1 + (1+hL)]h^4\\
+	\le & \cdots \\
+	\le & (1+hL)^n e_0 + C\frac{(1+hL)^n-1}{hL}
+h^4\\
+\le & \frac{C}{L}h^3(e^{nhL}-1)	\end{split}
+	\end{equation}
+	Since $nh$ is the length of time interval and hence a fixed number, we conclude the result.
+\end{proof}
+It suffices to show that $\phi$ is Lipschitz on $y$, and the constant is not dependent on $h<1$. In fact, we show this is correct for all Runge--Kutta formula, provided $f$ is Lipschitz on $y$.
+
+Suppose that $|f(x,y) - f(x,y')| \le L_f|y-y'|$, we have
+\begin{equation}
+|K_1(x_n,y_n) - K_1(x_n,y_n')| \le L_f|y-y'|
+\end{equation}
+
+\begin{equation}
+%\begin{split}
+|K_2(x_n,y_n) - K_2(x_n,y_n')| \le L_f|y-y'| + L_f|hb_{21}||K_1(x_n,y_n) - K_1(x_n,y_n')| 
+\le  [L_f + L_f^2|b_{21}]|y-y'|
+%\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+|K_3(x_n,y_n) - K_3(x_n,y_n')| \le& L_f|y-y'| + L_f|b_{31}||K_1(x_n,y_n) - K_1(x_n,y_n')| + L_f|b_{32}||K_2(x_n,y_n) - K_2(x_n,y_n')|\\
+\le & \Big[L_f + L_f^2|b_{31}| + L_f^2|b_{32}| + L_f^3|b_{32}b_{21}|\Big]|y-y'|
+\end{split}
+\end{equation}
+
+Hence we conclude that $\phi(x,y,h)$ is Lipschitz on $y$, with constant $3L_f +  L_f^2|b_{21}+L_f^2|b_{31}| + L_f^2|b_{32}| + L_f^3|b_{32}b_{21}|$.
+ 
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Escape special TeX symbols (%, &, _, #, $)

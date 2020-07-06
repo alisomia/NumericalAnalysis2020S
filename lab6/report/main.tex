@@ -1,0 +1,112 @@
+\documentclass{article}
+\usepackage[ruled, linesnumbered]{algorithm2e}
+\def\showtopic{Numerical Analysis}
+\def\showtitle{Lab 6: Markov Chain Monte Carlo}
+\def\showabs{Lab 6}
+\def\showauthor{Ting Lin, 1700010644}
+\def\showchead{LIN}
+\input{preamble.tex}
+\DeclareMathOperator{\size}{size}
+\begin{document}
+	\maketitle
+	\thispagestyle{fancy}
+	\tableofcontents
+	
+	\section*{}
+
+
+Markov Chain Monte Carlo is a useful tool for sampling from a complex distribution. Broad application and extensive theoretical study have made MCMC powerful in scientific computing, statistics and machine learning. In this report, we utilize Metropolis algorithm, a kind of MCMC, to simulate Ising model.
+
+\section{Ising model and Metropolis Algorithm}
+
+Ising model considers a $M \times M$ matrix $\sigma$, with values in $\{-1,+1\}$. We called $\sigma$ as a spin configuration. The corresponding Hamiltonian 
+$$H(\sigma) = -\sum_{i,j=1}^M(\sigma_{i,j}\sigma_{i+1,j}+\sigma_{i,j}\sigma_{i,j+1})$$
+Here the boundary condition is periodic. 
+Denote $\Sigma$ be all possible configurations, endowed with the following probability.
+
+\begin{equation}
+P_\beta(\sigma) = \frac 1Z(e^{-\beta H(\sigma)}),
+\end{equation}
+where  the normalization constant
+\begin{equation}
+Z = \sum_{\sigma \in \Sigma}e^{-\beta H(\sigma)}
+\end{equation}
+and Boltzmann constant  $\beta=\frac{1}{\kappa_BT}$.
+We define the energy as an expectation:
+\begin{equation}
+U_\beta  = \frac{1}{M^2}\sum_\sigma P_\beta(\sigma) H(\sigma)
+\end{equation}
+and the specific heat capacity in a similar manner:
+\begin{equation}
+C_\beta = \frac{\beta^2}{M^2} \sum_\sigma P_\beta(\sigma) (H(\sigma)-M^2U_\beta)^2
+\end{equation}
+
+For given $\beta$, we use Metropolis algorithm to compute corresponding $U$ and $C$. 
+
+We construct a Markov chain (state space is $\Sigma$), whose stationary distribution is $P_\beta$.  
+ Define 
+\begin{equation}
+G(\sigma,\sigma')=\left\{\begin{array}{ll}
+\frac{1}{M^2} & \sigma \text{ and }\sigma'\text{are adjacent},\\
+0 & \text{otherwise}.
+\end{array}\right.
+\end{equation}
+and hereafter the transition matrix
+\begin{equation}
+P(\sigma\to \sigma') = \left\{\begin{array}{ll}
+G(\sigma,\sigma')\min(1,e^{-\beta(H(\sigma')-H(\sigma))}) & \sigma\neq \sigma', \\
+1-\sum_{\sigma'\neq \sigma}P(\sigma\to\sigma') & \sigma= \sigma'. \\
+\end{array}\right.
+\end{equation}
+It is easy to verify that $P$ is aperiodic and satisfies the detailed balance condition, thus the unique stationary distribution of $P$ is $P_\beta(x)$. Inspired by this, we introduce Algorithm~\ref{alg:1}
+
+\begin{algorithm}[htbp]
+	\caption{Metropolis method}
+	\label{alg:1}
+	\begin{algorithmic}
+		\FOR{$k=1,\dots,N$}
+		\STATE With equal probability, choose$\sigma_{i,j}$. 
+		\STATE $v = \sigma_{i,j}(\sigma_{i-1,j}+\sigma_{i+1,j}+\sigma_{i,j-1}+\sigma_{i,j+1}).$
+		\STATE Generate $x \sim \mathcal U(0,1)$.
+		\IF{$x<e^{-2\beta v}$}
+		\STATE $\sigma_{i,j} = -\sigma_{i,j}$
+		\STATE $\sigma^{(k)} = \sigma_{i,j}$.
+		\ELSE
+		\STATE $\sigma^{(k)}=\sigma^{(k-1)}$.
+		\ENDIF
+		\ENDFOR
+		\STATE $U =\frac{1}{nM^2}\sum_{k=1}^n H(\sigma^{(n)})$
+		\STATE $C=\frac{\beta^2}{nM^2}\sum_{k=1}^n [H^2(\sigma^{(n)})-M^4U^2]$.
+		\STATE \textbf{Output:} Estimation of energy $U$ and capacity $C$.
+	\end{algorithmic}
+\end{algorithm}
+
+The convergence result of the proposed algorithm can be established based on the ergodic theorem of Markov Chain. 
+\subsection{Practical Considerations}
+We use warming up technique, i.e., replace the summation from $k=1$ to $k=M$. Here $M<N$ is a fixed number. 
+Also to observe the result more quickly, we simulate two chains simultaneously, and halt the algorithm if results of two chains are close (for example, the difference is less than $1e-5$).
+
+
+From Monte Carlo simulation, we see that $U$ increase rapidly around $\beta=0.44$ and $C$ achieve its maximum at $\beta=0.44$. We infer that the phase trasition occurs when inverse temperature $\hat   \beta_c\approx 0.44$, approximates the exact result $0.4407$ well.
+
+The numerical result please see \textbf{./result}.
+\section{Conclusion}
+In this report, we introduce the Metropolis method and apply it on 2D Ising model to calculate the energy and capacity at different temperatures. Several techniques are proposed to reduce the bias and variance, thus improving computational efficiency.
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Escape special TeX symbols (%, &, _, #, $)
